@@ -1,2 +1,2 @@
 # cloudflareOddix
-In this repository i will save some projects that i'm working in it.
+In this repository i will save some projects i'm working on.
