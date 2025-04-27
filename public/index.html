@@ -1,0 +1,75 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Magic To-Do</title>
+  <meta name="author" content="Catalina Pérez Vásquez">
+  <meta name="description" content="Website dedicated to creating a to-do list that uses AI to organize.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+  <h1>My To-Do List (with some magic 🪄)</h1>
+
+	<div class="input">
+		<input type="text" id="InputTask" placeholder="Write your task here..." />
+  	<button id= "add" onclick="addTask()">Add Task</button>
+	</div>
+
+	<section class="container">
+  	<ul id="TaskList">
+			<!--tasks-->
+		</ul>
+		<div id = "aiSummary"> </div>
+		<button id="magic" onclick="prioritizeTask()">✨Magic✨</button>
+	</section>
+
+
+ <script>
+    const tasks = [];
+
+    function addTask() {
+      const input = document.getElementById("InputTask");
+      const task = input.value.trim();
+      if (task === "") return;
+
+      tasks.push(task);
+      updateTaskList();
+      input.value = "";
+    }
+
+
+  function updateTaskList() {
+    const list = document.getElementById("TaskList");
+    list.innerHTML = "";
+    tasks.forEach((task, index) => {
+      const li = document.createElement("li");
+      li.textContent = task;
+
+      const delBtn = document.createElement("button");
+      delBtn.textContent = "❌";
+      delBtn.onclick = () => {
+        tasks.splice(index, 1);
+        updateTaskList();
+      };
+
+      li.appendChild(delBtn);
+      list.appendChild(li);
+    });
+  }
+
+async function prioritizeTask() {
+  const response = await fetch("api/prioritize", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ tasks })
+  });
+
+  const data = await response.json();
+  const summary = document.getElementById("aiSummary");
+	summary.innerHTML = `<h3>IA dice:</h3><pre>${data.result}</pre>`;}
+
+ </script>
+</body>
+</html>
